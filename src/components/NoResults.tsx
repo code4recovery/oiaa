@@ -1,15 +1,17 @@
-import React from 'react';
-import { Alert, Box, Stack } from '@chakra-ui/core';
+import React, { useContext } from 'react';
+import { Alert, Box, Stack } from '@chakra-ui/react';
 
 import { ButtonPrimary } from './ButtonPrimary';
-import { State } from '../helpers/data';
+import { i18n, State } from '../helpers';
 
-type NoResults = {
+export type NoResultsProps = {
   state: State;
   toggleTag: (filter: string, value: string, checked: boolean) => void;
 };
 
-export function NoResults({ state, toggleTag }: NoResults) {
+export function NoResults({ state, toggleTag }: NoResultsProps) {
+  const { t } = useContext(i18n);
+
   //get currrently active filters
   const filters = Object.keys(state.filters)
     .map(filter =>
@@ -21,9 +23,9 @@ export function NoResults({ state, toggleTag }: NoResults) {
   return (
     <Alert flexDirection="column" py={60} rounded="md">
       <Stack spacing={5} align="center">
-        <Box>No results match the selected filters:</Box>
+        <Box>{t('no_results')}</Box>
         {filters.map(([filter, tag], index) => (
-          <Box>
+          <Box key={index}>
             <ButtonPrimary
               key={index}
               icon="small-close"
@@ -31,6 +33,7 @@ export function NoResults({ state, toggleTag }: NoResults) {
                 toggleTag(filter, tag, false);
               }}
               text={tag}
+              title={tag}
             />
           </Box>
         ))}
